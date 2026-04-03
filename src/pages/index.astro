@@ -34,8 +34,8 @@ const blogPosts = allPosts
   <!-- Hero Section -->
   <section id="hero" class="snap-section min-h-screen flex flex-col items-center justify-center px-6 relative grid-bg">
     <!-- Misty hills card -->
-    <div class="relative z-10 w-full max-w-4xl mx-auto mt-8 mb-12">
-      <div class="relative overflow-hidden border border-[#B4BCA0] shadow-[0_4px_30px_rgba(74,82,64,0.12)]" style="aspect-ratio: 16/7; background: #D5D1C8;">
+    <div class="relative z-10 w-full max-w-4xl mx-auto mb-12" style="margin-top: calc(4vh + 4px);">
+      <div class="relative overflow-hidden border border-[#B4BCA0] shadow-[0_4px_30px_rgba(74,82,64,0.12)]" style="height: 40vh; background: #D5D1C8;">
         <svg viewBox="0 0 1440 630" class="w-full h-full" preserveAspectRatio="none">
           <!-- Sky/mist background -->
           <rect width="1440" height="630" fill="#D5D1C8"/>
@@ -55,19 +55,23 @@ const blogPosts = allPosts
         <!-- Fog layer 1 - slow drift, lower and darker -->
         <div class="absolute inset-0 fog-drift-1 pointer-events-none">
           <svg viewBox="0 0 2880 630" class="h-full" style="width: 200%;" preserveAspectRatio="none">
+            <!-- First pass -->
             <ellipse cx="400" cy="380" rx="500" ry="70" fill="#A3A88B" opacity="0.45"/>
             <ellipse cx="1100" cy="420" rx="400" ry="55" fill="#B4BCA0" opacity="0.4"/>
-            <ellipse cx="1800" cy="360" rx="550" ry="65" fill="#A3A88B" opacity="0.4"/>
-            <ellipse cx="2500" cy="400" rx="450" ry="60" fill="#B4BCA0" opacity="0.35"/>
+            <!-- Duplicate offset by 1440 for seamless loop -->
+            <ellipse cx="1840" cy="380" rx="500" ry="70" fill="#A3A88B" opacity="0.45"/>
+            <ellipse cx="2540" cy="420" rx="400" ry="55" fill="#B4BCA0" opacity="0.4"/>
           </svg>
         </div>
         <!-- Fog layer 2 - faster, thinner wisps, lower -->
         <div class="absolute inset-0 fog-drift-2 pointer-events-none">
           <svg viewBox="0 0 2880 630" class="h-full" style="width: 200%;" preserveAspectRatio="none">
+            <!-- First pass -->
             <ellipse cx="300" cy="440" rx="350" ry="35" fill="#A3A88B" opacity="0.3"/>
             <ellipse cx="900" cy="350" rx="300" ry="30" fill="#B4BCA0" opacity="0.25"/>
-            <ellipse cx="1600" cy="460" rx="400" ry="40" fill="#A3A88B" opacity="0.3"/>
-            <ellipse cx="2300" cy="370" rx="350" ry="35" fill="#B4BCA0" opacity="0.25"/>
+            <!-- Duplicate offset by 1440 for seamless loop -->
+            <ellipse cx="1740" cy="440" rx="350" ry="35" fill="#A3A88B" opacity="0.3"/>
+            <ellipse cx="2340" cy="350" rx="300" ry="30" fill="#B4BCA0" opacity="0.25"/>
           </svg>
         </div>
       </div>
