@@ -4,7 +4,7 @@
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
 | 1 | Infrastructure & Setup | COMPLETE | 01-01 |
-| 2 | Landing Page | Not Started | TBD |
+| 2 | Landing Page | COMPLETE | 02-01 |
 | 3 | Blog Engine | Not Started | TBD |
 | 4 | Polish & Deploy | Not Started | TBD |
 

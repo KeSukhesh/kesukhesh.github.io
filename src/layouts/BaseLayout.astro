@@ -6,9 +6,10 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  fullHeight?: boolean;
 }
 
-const { title, description = 'Personal website of Sukhesh Patro' } = Astro.props;
+const { title, description = 'Personal website of Sukhesh Patro', fullHeight = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -41,7 +42,7 @@ const { title, description = 'Personal website of Sukhesh Patro' } = Astro.props
   </head>
   <body class="min-h-screen bg-paper text-ink transition-colors duration-300">
     <Header />
-    <main class="pt-16">
+    <main class:list={[{ 'pt-16': !fullHeight }]}>
       <slot />
     </main>
     <Footer />
