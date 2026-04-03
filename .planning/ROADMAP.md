@@ -5,8 +5,8 @@
 |-------|------|--------|-------|
 | 1 | Infrastructure & Setup | COMPLETE | 01-01 |
 | 2 | Landing Page | COMPLETE | 02-01 |
-| 3 | Blog Engine | Not Started | TBD |
-| 4 | Polish & Deploy | Not Started | TBD |
+| 3 | Blog Engine | COMPLETE | 03-01, 03-02, 03-03 |
+| 4 | Polish & Deploy | COMPLETE | 04-01 |
 
 ---
 

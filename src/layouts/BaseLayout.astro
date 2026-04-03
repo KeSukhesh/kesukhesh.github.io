@@ -7,9 +7,11 @@ interface Props {
   title: string;
   description?: string;
   fullHeight?: boolean;
+  ogType?: string;
 }
 
-const { title, description = 'Personal website of Sukhesh Patro', fullHeight = false } = Astro.props;
+const { title, description = 'Personal website of Sukhesh Patro', fullHeight = false, ogType = 'website' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -19,8 +21,21 @@ const { title, description = 'Personal website of Sukhesh Patro', fullHeight = f
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL.href} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:site_name" content="Sukhesh Patro" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,6 +44,8 @@ const { title, description = 'Personal website of Sukhesh Patro', fullHeight = f
       href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
+    <slot name="head" />
 
     <!-- Inline theme script to prevent FOUC -->
     <script is:inline>
