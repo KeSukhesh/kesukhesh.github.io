@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogSearch from '../../components/BlogSearch.astro';
 import { getReadingTime } from '../../utils/reading-time.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -11,6 +12,14 @@ export const getStaticPaths = (async ({ paginate }) => {
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const searchPosts = allPosts.map((post) => ({
+  id: post.id,
+  title: post.data.title,
+  description: post.data.description,
+  tags: post.data.tags,
+}));
 ---
 
 <BaseLayout title="Blog — Sukhesh Patro" description="Writing about software engineering, automation, and building things.">
@@ -20,6 +29,8 @@ const { page } = Astro.props;
       <p class="text-muted mb-12">
         Thoughts on software engineering, automation, and building things.
       </p>
+
+      <BlogSearch posts={searchPosts} />
 
       <div class="space-y-8">
         {page.data.map((post) => {
