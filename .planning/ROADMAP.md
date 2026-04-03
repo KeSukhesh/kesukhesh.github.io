@@ -3,7 +3,7 @@
 ## Progress
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | Infrastructure & Setup | Not Started | 01-01 |
+| 1 | Infrastructure & Setup | COMPLETE | 01-01 |
 | 2 | Landing Page | Not Started | TBD |
 | 3 | Blog Engine | Not Started | TBD |
 | 4 | Polish & Deploy | Not Started | TBD |
