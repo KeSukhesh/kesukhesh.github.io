@@ -94,6 +94,33 @@
   transition: none;
 }
 
+/* Grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: calc(100vw / 7) calc(100vh / 5);
+}
+
+/* Fog drift animations */
+@keyframes fog-drift-slow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fog-drift-fast {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.fog-drift-1 {
+  animation: fog-drift-slow 30s linear infinite;
+}
+
+.fog-drift-2 {
+  animation: fog-drift-fast 20s linear infinite;
+}
+
 /* Hero letter-drop animation */
 @keyframes letter-drop {
   0% {
