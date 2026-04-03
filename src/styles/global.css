@@ -99,7 +99,7 @@
   background-image:
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: calc(100vw / 7) calc(100vh / 5);
+  background-size: calc(100vw / 7) calc(100vw / 7);
 }
 
 /* Fog drift animations */
