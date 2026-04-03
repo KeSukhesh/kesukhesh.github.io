@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 
 interface Props {
   title: string;
@@ -8,9 +9,10 @@ interface Props {
   tags: string[];
   readingTime: string;
   headings: { depth: number; slug: string; text: string }[];
+  slug: string;
 }
 
-const { title, description, date, tags, readingTime, headings } = Astro.props;
+const { title, description, date, tags, readingTime, headings, slug } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-AU', {
   year: 'numeric',
@@ -75,6 +77,9 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       <div class="prose">
         <slot />
       </div>
+
+      <!-- Related posts -->
+      <RelatedPosts currentId={slug} tags={tags} />
 
       <!-- Back to blog -->
       <div class="mt-16 pt-8 border-t border-border">

@@ -1,0 +1,101 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getReadingTime } from '../../utils/reading-time.ts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return paginate(sorted, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title="Blog — Sukhesh Patro" description="Writing about software engineering, automation, and building things.">
+  <div class="px-6 py-16 md:py-24">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4">Writing</h1>
+      <p class="text-muted mb-12">
+        Thoughts on software engineering, automation, and building things.
+      </p>
+
+      <div class="space-y-8">
+        {page.data.map((post) => {
+          const readingTime = getReadingTime(post.body ?? '');
+          return (
+            <article class="group">
+              <a href={`/blog/${post.id}`} class="block">
+                <div class="flex items-center gap-3 text-sm font-mono text-muted mb-2">
+                  <time datetime={post.data.date.toISOString().split('T')[0]}>
+                    {post.data.date.toLocaleDateString('en-AU', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>{readingTime}</span>
+                </div>
+
+                <h2 class="text-xl font-bold mb-2 group-hover:text-forest transition-colors">
+                  {post.data.title}
+                </h2>
+
+                <p class="text-muted text-sm leading-relaxed mb-3">
+                  {post.data.description}
+                </p>
+              </a>
+
+              {post.data.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {post.data.tags.map((tag) => (
+                    <a
+                      href={`/blog/tags/${tag}`}
+                      class="text-xs font-mono px-2 py-1 bg-forest/10 text-forest rounded-full border border-forest/20 hover:bg-forest/20 transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+
+      {/* Pagination */}
+      {(page.url.prev || page.url.next) && (
+        <nav class="flex items-center justify-between mt-16 pt-8 border-t border-border" aria-label="Pagination">
+          {page.url.prev ? (
+            <a
+              href={page.url.prev}
+              class="inline-flex items-center gap-2 text-forest hover:text-forest-light font-medium transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+              </svg>
+              Newer posts
+            </a>
+          ) : (
+            <span />
+          )}
+          {page.url.next ? (
+            <a
+              href={page.url.next}
+              class="inline-flex items-center gap-2 text-forest hover:text-forest-light font-medium transition-colors"
+            >
+              Older posts
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </div>
+  </div>
+</BaseLayout>

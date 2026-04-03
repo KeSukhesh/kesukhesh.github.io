@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentId: string;
+  tags: string[];
+}
+
+const { currentId, tags } = Astro.props;
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+
+const related = allPosts
+  .filter((post) => post.id !== currentId)
+  .map((post) => ({
+    post,
+    score: post.data.tags.filter((tag) => tags.includes(tag)).length,
+  }))
+  .filter((item) => item.score > 0)
+  .sort((a, b) => b.score - a.score || b.post.data.date.getTime() - a.post.data.date.getTime())
+  .slice(0, 3)
+  .map((item) => item.post);
+---
+
+{related.length > 0 && (
+  <section class="mt-16 pt-8 border-t border-border">
+    <h2 class="text-lg font-bold mb-6">Related posts</h2>
+    <div class="space-y-4">
+      {related.map((post) => (
+        <a href={`/blog/${post.id}`} class="group block">
+          <div class="flex items-baseline justify-between gap-4">
+            <h3 class="font-medium group-hover:text-forest transition-colors">
+              {post.data.title}
+            </h3>
+            <time
+              datetime={post.data.date.toISOString().split('T')[0]}
+              class="text-sm font-mono text-muted shrink-0"
+            >
+              {post.data.date.toLocaleDateString('en-AU', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </time>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

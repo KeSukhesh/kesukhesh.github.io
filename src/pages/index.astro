@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ScrollReveal from '../components/ScrollReveal.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
@@ -21,23 +22,10 @@ const projects = [
   },
 ];
 
-const blogPosts = [
-  {
-    title: 'Building with Astro: A Modern Static Site',
-    date: '2026-04-01',
-    excerpt: 'How I built this site with Astro, Tailwind CSS, and a focus on performance.',
-  },
-  {
-    title: 'Automation at Scale',
-    date: '2026-03-15',
-    excerpt: 'Lessons learned building automation systems that handle thousands of workflows.',
-  },
-  {
-    title: 'From UNSW to Startup Life',
-    date: '2026-03-01',
-    excerpt: 'Reflections on transitioning from university to building at a fast-moving startup.',
-  },
-];
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const blogPosts = allPosts
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
 ---
 
 <BaseLayout title="Sukhesh Patro" description="Software engineer, builder, thinker. Personal website of Sukhesh Patro." fullHeight>
@@ -180,17 +168,17 @@ const blogPosts = [
 
       <div class="space-y-6">
         {blogPosts.map((post, i) => (
-          <div class:list={['reveal', `reveal-delay-${i + 1}`, 'group border-b border-border pb-6 last:border-0']}>
+          <a href={`/blog/${post.id}`} class:list={['reveal', `reveal-delay-${i + 1}`, 'group block border-b border-border pb-6 last:border-0']}>
             <p class="text-sm font-mono text-muted mb-2">
-              {new Date(post.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
+              {post.data.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
             <h3 class="text-xl font-bold mb-2 group-hover:text-forest transition-colors">
-              {post.title}
+              {post.data.title}
             </h3>
             <p class="text-muted text-sm leading-relaxed">
-              {post.excerpt}
+              {post.data.description}
             </p>
-          </div>
+          </a>
         ))}
       </div>
 
