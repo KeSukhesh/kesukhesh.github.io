@@ -1,0 +1,88 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { href: '/blog', label: 'Blog' },
+  { href: '/#projects', label: 'Projects' },
+  { href: '/#about', label: 'About' },
+];
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-paper/80 backdrop-blur-sm border-b border-border transition-colors duration-300">
+  <nav class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="/" class="text-lg font-bold text-ink hover:text-forest transition-colors">
+      Sukhesh Patro
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-6">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="text-sm text-muted hover:text-ink transition-colors duration-200"
+        >
+          {link.label}
+        </a>
+      ))}
+      <ThemeToggle />
+    </div>
+
+    <!-- Mobile hamburger -->
+    <div class="flex items-center gap-2 md:hidden">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Toggle menu"
+        class="p-2 text-muted hover:text-ink transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path id="menu-open-icon" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <path id="menu-close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-paper/95 backdrop-blur-sm">
+    <div class="px-6 py-4 flex flex-col gap-4">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="text-sm text-muted hover:text-ink transition-colors duration-200"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  function setupMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
+
+    btn?.addEventListener('click', () => {
+      const isOpen = !menu?.classList.contains('hidden');
+      menu?.classList.toggle('hidden');
+      openIcon?.classList.toggle('hidden');
+      closeIcon?.classList.toggle('hidden');
+    });
+
+    // Close menu on link click
+    menu?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        openIcon?.classList.remove('hidden');
+        closeIcon?.classList.add('hidden');
+      });
+    });
+  }
+
+  setupMobileMenu();
+  document.addEventListener('astro:after-swap', setupMobileMenu);
+</script>
