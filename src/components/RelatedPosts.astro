@@ -24,17 +24,17 @@ const related = allPosts
 
 {related.length > 0 && (
   <section class="mt-16 pt-8 border-t border-border">
-    <h2 class="text-lg font-bold mb-6">Related posts</h2>
+    <h2 class="text-2xl font-semibold mb-6">Related posts</h2>
     <div class="space-y-4">
       {related.map((post) => (
         <a href={`/blog/${post.id}`} class="group block">
           <div class="flex items-baseline justify-between gap-4">
-            <h3 class="font-medium group-hover:text-forest transition-colors">
+            <h3 class="font-semibold group-hover:text-forest transition-colors">
               {post.data.title}
             </h3>
             <time
               datetime={post.data.date.toISOString().split('T')[0]}
-              class="text-sm font-mono text-muted shrink-0"
+              class="text-sm caps text-muted shrink-0"
             >
               {post.data.date.toLocaleDateString('en-AU', {
                 year: 'numeric',

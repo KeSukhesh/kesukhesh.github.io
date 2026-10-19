@@ -25,7 +25,7 @@ const searchPosts = allPosts.map((post) => ({
 <BaseLayout title="Blog — Sukhesh Patro" description="Writing about software engineering, automation, and building things.">
   <div class="px-6 py-16 md:py-24">
     <div class="max-w-3xl mx-auto">
-      <h1 class="text-3xl md:text-4xl font-bold mb-4">👋 Welcome to my Writings</h1>
+      <h1 class="text-4xl md:text-5xl font-medium mb-4">👋 Welcome to my Writings</h1>
       <p class="text-muted mb-12">
         Hi, this is Sukhesh. I'm documenting my learning notes in this blog since 2026. Based on the amount of writing mistakes, you'll be able to guess how much AI is involved 😸.
       </p>
@@ -38,7 +38,7 @@ const searchPosts = allPosts.map((post) => ({
           return (
             <article class="group">
               <a href={`/blog/${post.id}`} class="block">
-                <div class="flex items-center gap-3 text-sm font-mono text-muted mb-2">
+                <div class="flex items-center gap-3 text-sm caps text-muted mb-2">
                   <time datetime={post.data.date.toISOString().split('T')[0]}>
                     {post.data.date.toLocaleDateString('en-AU', {
                       year: 'numeric',
@@ -50,7 +50,7 @@ const searchPosts = allPosts.map((post) => ({
                   <span>{readingTime}</span>
                 </div>
 
-                <h2 class="text-xl font-bold mb-2 group-hover:text-forest transition-colors">
+                <h2 class="text-2xl font-semibold mb-1 group-hover:text-forest transition-colors">
                   {post.data.title}
                 </h2>
 
@@ -64,7 +64,7 @@ const searchPosts = allPosts.map((post) => ({
                   {post.data.tags.map((tag) => (
                     <a
                       href={`/blog/tags/${tag}`}
-                      class="text-xs font-mono px-2 py-1 bg-forest/10 text-forest rounded-full border border-forest/20 hover:bg-forest/20 transition-colors"
+                      class="caps text-xs text-forest hover:text-forest-light transition-colors"
                     >
                       {tag}
                     </a>

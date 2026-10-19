@@ -35,7 +35,7 @@ const { posts, tag } = Astro.props;
           All posts
         </a>
 
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">
+        <h1 class="text-4xl md:text-5xl font-medium mb-2">
           <span class="text-forest">#</span>{tag}
         </h1>
         <p class="text-muted">
@@ -49,7 +49,7 @@ const { posts, tag } = Astro.props;
           return (
             <article class="group">
               <a href={`/blog/${post.id}`} class="block">
-                <div class="flex items-center gap-3 text-sm font-mono text-muted mb-2">
+                <div class="flex items-center gap-3 text-sm caps text-muted mb-2">
                   <time datetime={post.data.date.toISOString().split('T')[0]}>
                     {post.data.date.toLocaleDateString('en-AU', {
                       year: 'numeric',
@@ -61,7 +61,7 @@ const { posts, tag } = Astro.props;
                   <span>{readingTime}</span>
                 </div>
 
-                <h2 class="text-xl font-bold mb-2 group-hover:text-forest transition-colors">
+                <h2 class="text-2xl font-semibold mb-1 group-hover:text-forest transition-colors">
                   {post.data.title}
                 </h2>
 

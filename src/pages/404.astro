@@ -1,15 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const petals = Array.from({ length: 8 }, (_, i) => i * 45);
 ---
 
 <BaseLayout title="404 — Not Found">
-  <section class="min-h-screen flex items-center justify-center px-6">
-    <div class="text-center">
-      <h1 class="text-6xl font-bold text-forest mb-4">404</h1>
-      <p class="text-lg text-muted mb-8">This page doesn't exist.</p>
-      <a href="/" class="text-forest hover:text-forest-light underline transition-colors">
-        Go home
-      </a>
+  <section class="min-h-[80svh] flex items-center justify-center px-6">
+    <div class="text-center flex flex-col items-center gap-5">
+      <!-- A white lotus Pai Sho tile -->
+      <svg viewBox="0 0 120 120" class="w-28 h-28" role="img" aria-label="A white lotus Pai Sho tile">
+        <circle cx="60" cy="60" r="56" fill="var(--parch)" stroke="var(--fg)" stroke-width="2.5" />
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--fg)" stroke-width=".8" opacity=".5" />
+        {petals.map((a) => (
+          <ellipse cx="60" cy="40" rx="7.5" ry="17" transform={`rotate(${a} 60 60)`} fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2" />
+        ))}
+        <circle cx="60" cy="60" r="7" fill="var(--forest)" />
+      </svg>
+      <h1 class="text-6xl font-medium">404</h1>
+      <p class="text-lg text-ink-2 max-w-sm">This page doesn't exist. Even the White Lotus loses a game now and then.</p>
+      <a href="/" class="caps text-sm text-forest hover:text-forest-light transition-colors">Back to the hill</a>
     </div>
   </section>
 </BaseLayout>

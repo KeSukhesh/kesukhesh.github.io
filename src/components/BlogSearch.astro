@@ -29,7 +29,7 @@ const { posts } = Astro.props;
       id="search-input"
       placeholder="Search posts..."
       autocomplete="off"
-      class="w-full pl-12 pr-4 py-3 bg-paper border border-border rounded-xl text-ink placeholder:text-muted focus:outline-none focus:border-forest transition-colors font-mono text-sm"
+      class="w-full pl-12 pr-4 py-3 bg-paper border border-border rounded-sm text-ink placeholder:text-muted focus:outline-none focus:border-forest transition-colors text-base"
     />
   </div>
 
@@ -84,7 +84,7 @@ const { posts } = Astro.props;
       .map(
         ({ item }) => `
         <a href="/blog/${item.id}" class="group block">
-          <h3 class="font-medium group-hover:text-forest transition-colors">${item.title}</h3>
+          <h3 class="font-semibold group-hover:text-forest transition-colors">${item.title}</h3>
           <p class="text-sm text-muted">${item.description}</p>
         </a>
       `
