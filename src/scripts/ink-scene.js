@@ -10,6 +10,9 @@ const ease = (t) => 1 - Math.pow(1 - t, 3);
 const mulberry = (s) => () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
 const rgba = (hex, a) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; };
 const hash = (n) => { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); };
+const smooth = (t) => t * t * (3 - 2 * t);
+// Width where the hero's hill stroke hands over to the page ridge; both sides must agree.
+const seamWidth = (w) => Math.max(4, w * .008) * .92;
 const noise1 = (x) => { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return hash(i) * (1 - u) + hash(i + 1) * u; };
 
 function leafPath(ctx, x, y, rot, s) {
@@ -89,16 +92,16 @@ class Scene {
 
     // Sky.
     const bg = this.bg = layer(W, H, dpr);
+    // Light sky is the paper itself; night sky fades out at the bottom so the page texture continues.
     if (night) {
       const g = bg.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, c.top); g.addColorStop(.62, c.glow); g.addColorStop(1, c.paper);
-      bg.fillStyle = g;
-    } else bg.fillStyle = c.paper;
-    bg.fillRect(0, 0, W, H);
+      g.addColorStop(0, c.top); g.addColorStop(.62, c.glow); g.addColorStop(1, rgba(c.paper, 0));
+      bg.fillStyle = g; bg.fillRect(0, 0, W, H);
+    }
 
     // Hill ridge: rises to the tree, falls off the right edge where the page ridge picks it up.
     const ridge = bez([-10, H * .9], [W * .25, H * .9], [W * .45, hy], [hx, hy], 120, []);
-    bez([hx, hy], [W * .78, hy], [W * .85, H * .86], [W * .86, H + 2], 120, ridge);
+    bez([hx, hy], [W * .78, hy], [W * .86, H * .86], [W * .86, H + 2], 120, ridge);
 
     // Sun (moon at night): a watercolour wash painted once, then moved per frame so it can set behind the hill.
     const sr = Math.min(W, H) * (night ? .075 : .13), sx = W * (portrait ? .22 : .3);
@@ -123,15 +126,18 @@ class Scene {
     disc(); sl.strokeStyle = rgba(c.sun, night ? .3 : .38); sl.lineWidth = 1.6; sl.stroke();
     this.sun = { sx, ry, sr, R, night, img: sl.canvas };
 
-    // Hill: paper fill hides the set sun, a faint wash under the ridge, two brush strokes, a few grass flicks.
+    // Hill: its shape is cut out of the sky each frame (hiding the set sun), then a faint wash, two strokes, grass.
+    const hp = this.hillPath = new Path2D();
+    ridge.forEach(([x, y], i) => i ? hp.lineTo(x, y) : hp.moveTo(x, y)); hp.lineTo(-10, H + 2); hp.closePath();
     const hl = this.hill = layer(W, H, dpr);
-    hl.beginPath(); ridge.forEach(([x, y], i) => i ? hl.lineTo(x, y) : hl.moveTo(x, y)); hl.lineTo(-10, H + 2); hl.closePath();
-    hl.fillStyle = c.paper; hl.fill();
     const hg = hl.createLinearGradient(0, hy, 0, hy + H * .16);
     hg.addColorStop(0, rgba(c.tree, .07)); hg.addColorStop(1, rgba(c.tree, 0));
-    hl.fillStyle = hg; hl.fill();
-    const wm = Math.max(3, W * .0065);
-    [ridge.slice(0, 121), ridge.slice(121)].forEach((p, k) => new Brush(p, (t) => wm * (.45 + .55 * noise1(t * 5 + k * 4)) * Math.min(1, t * 6 + .3), wm, 21 + k, { col: c.tree, alpha: .9, dry: .55 }).advance(hl, p.length));
+    hl.fillStyle = hg; hl.fill(hp);
+    const wm = Math.max(3, W * .0065), seam = seamWidth(W);
+    new Brush(ridge.slice(0, 121), (t) => wm * (.45 + .55 * noise1(t * 5)) * Math.min(1, t * 6 + .3), wm, 21, { col: c.tree, alpha: .9, dry: .55 }).advance(hl, 121);
+    // Right slope is painted from the bottom up so it is fully loaded, and seam-width, where the page ridge takes over.
+    const right = ridge.slice(121).reverse();
+    new Brush(right, (t) => { const e = smooth(clamp(t / .3)); return seam * (1 - e) + wm * (.45 + .55 * noise1(t * 5 + 4)) * e; }, Math.max(wm, seam), 22, { col: c.tree, alpha: .9, dry: .55 }).advance(hl, right.length);
     for (let i = 4; i < ridge.length - 4; i += 5) {
       const [x, y] = ridge[i];
       if (Math.abs(x - hx) < W * .1 || x < 0 || x > W || r() > .16) continue;
@@ -170,7 +176,7 @@ class Scene {
     const fw = F0.w, fh = F0.h;
     const pts = bez([fw * .86, 0], [fw * .86, fh * .2], [fw * .06, fh * .2], [fw * .1, fh * .52], 260, []);
     bez([fw * .1, fh * .52], [fw * .14, fh * .82], [fw * .5, fh * .8], [fw * .5, fh + 2], 260, pts);
-    this.rpts = pts; this.rdrawn = 0; this.rwidth = Math.max(4, fw * .008) * 1.15;
+    this.rpts = pts; this.rdrawn = 0; this.rwidth = Math.max(4, fw * .008) * 1.15; this.seam = seamWidth(fw);
     this.rlayer = layer(fw, fh, F0.dpr); this.ralpha = fw < 640 ? .35 : 1;
     this.rstrokes = [[0, 215], [222, 400], [406, 520]].map((rg) => ({ rg, br: null }));
 
@@ -211,6 +217,9 @@ class Scene {
       x.fillStyle = fade; x.fillRect(0, ry, this.W, this.H - ry);
       x.setTransform(1, 0, 0, 1, 0, 0);
       x.drawImage(img, Math.round((sx - R) * d), Math.round((sy - R) * d));
+      x.setTransform(d, 0, 0, d, 0, 0);
+      x.globalCompositeOperation = 'destination-out'; x.fill(this.hillPath); x.globalCompositeOperation = 'source-over';
+      x.setTransform(1, 0, 0, 1, 0, 0);
       x.drawImage(this.hill.canvas, 0, 0);
       x.save();
       if (!reduce) { x.translate(this.hx * d, this.hy * d); x.rotate(Math.sin(t * .7) * .0035); x.translate(-this.hx * d, -this.hy * d); }
@@ -233,7 +242,13 @@ class Scene {
         this.rstrokes.forEach((s, k) => {
           const [a, b] = s.rg, local = clamp(rt - a, 0, b - a), wm = this.rwidth;
           if (!local) return;
-          s.br ||= new Brush(this.rpts.slice(a, b + 1), (u) => wm * (.5 + .5 * noise1(u * 4 + k * 3)) * Math.min(1, u * 7 + .25) * (1 - .4 * u), wm, 40 + k, { col: c.stroke, alpha: .9, dry: .85 });
+          const seam = this.seam;
+          // First stroke starts at the hero's seam width; the later ones land fresh after a brush lift.
+          s.br ||= new Brush(this.rpts.slice(a, b + 1), (u) => {
+            const w = wm * (.5 + .5 * noise1(u * 4 + k * 3)) * (1 - .4 * u);
+            if (k) return w * Math.min(1, u * 7 + .25);
+            const e = smooth(clamp(u / .15)); return seam * (1 - e) + w * e;
+          }, wm, 40 + k, { col: c.stroke, alpha: .9, dry: .85 });
           s.br.advance(this.rlayer, local);
         });
         this.rdrawn = rt;
