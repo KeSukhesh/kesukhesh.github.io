@@ -218,7 +218,7 @@ class Scene {
       x.setTransform(1, 0, 0, 1, 0, 0);
       x.drawImage(img, Math.round((sx - R) * d), Math.round((sy - R) * d));
       x.setTransform(d, 0, 0, d, 0, 0);
-      x.globalCompositeOperation = 'destination-out'; x.fill(this.hillPath); x.globalCompositeOperation = 'source-over';
+      x.globalCompositeOperation = 'destination-out'; x.fillStyle = '#000'; x.fill(this.hillPath); x.globalCompositeOperation = 'source-over';
       x.setTransform(1, 0, 0, 1, 0, 0);
       x.drawImage(this.hill.canvas, 0, 0);
       x.save();
