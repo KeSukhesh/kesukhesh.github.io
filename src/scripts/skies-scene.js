@@ -195,28 +195,48 @@ export function startSkies(cvs) {
   const ease = (o, tgt, dt) => { const k = Math.min(1, dt * 4); o[0] += (tgt[0] - o[0]) * k; o[1] += (tgt[1] - o[1]) * k; };
 
   // --- Appa: drawn from shapes, not a bitmap, so he shades and scales cleanly ---
-  const FUR_L = [240, 238, 230], FUR_D = [150, 150, 160], LEG = [206, 206, 210], FOOT = [138, 138, 148];
-  const ARROW = [152, 100, 62], HORN = [198, 172, 132], EYE = [26, 26, 30], MOUTH = [108, 108, 116];
+  // Cream coat; the brown arrow runs off his head into a spine stripe with three pointed bands down his side and
+  // a stripe along his tail. Dark horns growing up and forward, dark grey chin and muzzle, pale eye, dark feet.
+  const CREAM_L = [246, 240, 222], CREAM_D = [166, 158, 144], STRIPE = [170, 118, 68], STRIPE_D = [130, 86, 48];
+  const HOOF = [76, 72, 74], HORN_DK = [110, 98, 86], HORN_TIP = [26, 26, 30], NOSE = [70, 66, 72];
+  const CHIN_D = [62, 60, 64], CHIN_L = [124, 120, 120], EYE_PALE = [226, 218, 196], MOUTH_DK = [36, 34, 38];
   const SADDLE = [180, 86, 54], SADDLE_D = [112, 58, 40], REIN = [100, 62, 44];
-  const furShade = (nx, ny, x, y) => {
+  const ell = (x, y, cx, cy, rx, ry) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2;
+  // A thick curved stroke sampled as short segments; returns how far along it (0..1) the point is, or -1.
+  const stroke = (x, y, f, w0, w1, n) => {
+    for (let k = 0; k < n; k++) {
+      const [ax, ay] = f(k / n), [bx, by] = f((k + 1) / n);
+      if (segDist(x, y, ax, ay, bx, by) < w0 + (w1 - w0) * (k + 0.5) / n) return (k + 0.5) / n;
+    }
+    return -1;
+  };
+  const creamShade = (nx, ny, x, y) => {
     const nz = Math.sqrt(Math.max(0, 1 - Math.min(1, nx * nx + ny * ny)));
     const lit = Math.max(0, nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2]);
-    return [(0.32 + 0.6 * lit) * (0.86 + 0.14 * vn(x * 1.4, y * 1.4, 33)), mix(FUR_D, FUR_L, lit)];
+    return [(0.32 + 0.6 * lit) * (0.86 + 0.14 * vn(x * 1.4, y * 1.4, 33)), mix(CREAM_D, CREAM_L, lit)];
   };
   function appaAt(x, y, tail, legP) {
     const fur = (vn(x * 0.8 + 3, y * 0.8, 31) - 0.5) * 0.28; // shaggy outline
-    for (const hx of [12, 15.6]) { // horns
-      const v = y + 7.2, u = x - hx;
-      if (v > -2.8 && v < 0.4 && Math.abs(u + v * 0.5) < 0.65) return [0.86, HORN];
+    for (const hx of [12.6, 16.2]) { // horns grow out of the head, up and forward
+      const k = stroke(x, y, s => [hx + 3.4 * s, -4.4 - 6.8 * s + 1.4 * s * s], 1.15, 0.55, 6);
+      if (k >= 0) return [0.88, k > 0.7 ? HORN_TIP : HORN_DK];
     }
     const hx = x - 15, hy = y + 1, he = (hx * hx) / 49 + (hy * hy) / 43.6;
-    if (he < 1 + fur) { // head, with the arrow running over it to a point on the forehead
-      if ((x - 19.2) ** 2 + (y + 1.6) ** 2 < 0.9) return [0.92, EYE];
-      if (Math.abs(y - 3) < 0.45 && x > 18 && x < 21.5) return [0.55, MOUTH];
+    const jowl = ell(x, y, 18.4, 3.0, 4.4, 3.6); // the big dark chin that hangs below his face
+    if (he < 1 + fur || jowl < 1) {
+      if (ell(x, y, 19.4, -0.6, 0.9, 0.7) < 1) return [0.9, EYE_PALE];
+      if (ell(x, y, 22.0, 0.9, 0.6, 0.5) < 1) return [0.9, NOSE];
+      if (Math.abs(y - 3.4) < 0.45 && x > 17.6 && x < 21.8) return [0.75, MOUTH_DK];
       const top = -1 - 6.6 * Math.sqrt(Math.max(0, 1 - hx * hx / 49));
-      const thick = x > 17 ? (21.8 - x) * 0.95 : 1.3;
-      if (x > 9 && y - top < thick) return [0.88, ARROW];
-      return furShade(hx / 7, hy / 6.6, x, y);
+      const thick = x > 17 ? (21.8 - x) * 0.95 : 1.6;
+      if (he < 1 && x > 8 && y - top < thick) return [0.88, STRIPE]; // the arrow, running back into the spine stripe
+      if (jowl < 1 || (x > 13 && y > 1.5 - (x - 13) * 0.39)) {        // dark grey muzzle and chin
+        const nx = (x - 18.4) / 4.4, ny = (y - 3.0) / 3.6, nz = Math.sqrt(Math.max(0, 1 - Math.min(1, nx * nx + ny * ny)));
+        const lit = Math.max(0, nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2]);
+        return [0.62 + 0.25 * lit, mix(CHIN_D, CHIN_L, lit)];
+      }
+      if (ell(x, y, 12.4, 1.4, 1.6, 1.1) < 1) return [0.7, CREAM_L];   // small ear
+      return creamShade(hx / 7, hy / 6.6, x, y);
     }
     if (segDist(x, y, 4.5, -8.4, 13, -5.5) < 0.38) return [0.72, REIN];
     const bodyTop = Math.abs(x) < 16 ? -8.8 * Math.sqrt(1 - (x * x) / 256) : 0;
@@ -225,16 +245,24 @@ export function startSkies(cvs) {
       return [0.84, rim ? SADDLE_D : SADDLE];
     }
     const ry = y > 0 ? 8 : 8.8, be = (x * x) / 256 + (y * y) / (ry * ry);
-    if (be < 1 + fur) return furShade(x / 16, y / ry, x, y);
+    if (be < 1 + fur) {
+      let band = 0; // three pointed bands down his side, hanging off the spine stripe
+      for (const c of [-9, 0, 9]) band = Math.max(band, 1 - Math.abs(x - c) / 2.8);
+      if (y < bodyTop + 1.4 + 5.6 * band) return [0.86, y < bodyTop + 1.1 ? STRIPE_D : STRIPE];
+      return creamShade(x / 16, y / ry, x, y);
+    }
     for (const lx of [-9.5, -2.5, 5.2]) { // three visible legs, paddling slowly
       const sw = Math.sin(legP + lx * 0.4), cx = lx + sw * 0.5;
       if (Math.abs(x - cx) < 1.7 && y > 6 && y < 11.2 + sw * 0.4)
-        return y > 10.1 + sw * 0.4 ? [0.7, FOOT] : [0.6 + 0.1 * vn(x, y, 7), LEG];
+        return y > 10.1 + sw * 0.4 ? [0.8, HOOF] : [0.6 + 0.1 * vn(x, y, 7), CREAM_L];
     }
-    // flat beaver tail, waggling, with its own arrow on top
+    // flat beaver tail, waggling, brown along the top in little points
     const tx = x + 15, ty = y - 1, ct = Math.cos(tail), st = Math.sin(tail);
     const u = tx * ct + ty * st, v = -tx * st + ty * ct;
-    if ((u + 6.5) ** 2 / 42 + (v * v) / 6.8 < 1 + fur) return v < -1.2 ? [0.85, ARROW] : furShade((u + 6.5) / 6.5, v / 2.6, x, y);
+    if ((u + 6.5) ** 2 / 42 + (v * v) / 6.8 < 1 + fur) {
+      const f = ((u / 3.2) % 1 + 1) % 1, tooth = Math.pow(1 - Math.abs(2 * f - 1), 1.4);
+      return v < -0.3 - 1.3 * tooth ? [0.86, STRIPE] : creamShade((u + 6.5) / 6.5, v / 2.6, x, y);
+    }
     return null;
   }
   // Appa's path is a pure function of time, so Toothless can plan around where he will be.
