@@ -267,7 +267,7 @@ export function startSkies(cvs) {
   }
   // Appa's path is a pure function of time, so Toothless can plan around where he will be.
   const appaS = () => Math.min(cols, rows) * 0.44 / 46;
-  const appaX = t => { const S = appaS(); return wrap(t * 1.1 * U + cols * 0.35, cols + 70 * S) - 32 * S; };
+  const appaX = t => { const S = appaS(); return wrap(t * 1.1 * U + cols * 0.2, cols + 70 * S) - 32 * S; };
   const APPA_FEET = 0.32; // high in the sky, clear of the intro text below
   const appaFeet = () => rows * APPA_FEET + 1.2 * U;
   function appa(t) {
