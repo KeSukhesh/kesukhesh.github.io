@@ -7,10 +7,11 @@ interface Props {
   title: string;
   description?: string;
   fullHeight?: boolean;
+  footer?: boolean;
   ogType?: string;
 }
 
-const { title, description = 'Personal website of Sukhesh Patro', fullHeight = false, ogType = 'website' } = Astro.props;
+const { title, description = 'Personal website of Sukhesh Patro', fullHeight = false, footer = true, ogType = 'website' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -41,7 +42,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Spectral:ital,wght@0,400;0,600;1,400&family=Spectral+SC:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -58,11 +59,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body class="min-h-screen bg-paper text-ink transition-colors duration-300">
-    <svg width="0" height="0" class="absolute" aria-hidden="true"><filter id="seal-rough"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="4" /><feDisplacementMap in="SourceGraphic" scale="1.2" /></filter></svg>
     <Header />
     <main class:list={[{ 'pt-16': !fullHeight }]}>
       <slot />
     </main>
-    <Footer />
+    {footer && <Footer />}
   </body>
 </html>

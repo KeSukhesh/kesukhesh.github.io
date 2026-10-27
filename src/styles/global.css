@@ -3,45 +3,29 @@
 /* Dark mode: class-based toggle */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Light: rice paper, sumi ink, vermilion seal. Dark: the same hill at night, seal turns moonlit blue. */
+/* Plain sky: the same near-white and near-black the Skies hero is painted on. Accent is Aang's airbending blue. */
 :root {
-  --bg: #ECE2CC;
-  --fg: #1A1814;
-  --ink-2: #4A443A;
-  --muted: #6F6553;
-  --forest: #B5361E;        /* accent: vermilion seal */
-  --forest-light: #C9563D;
-  --forest-dark: #4A443A;
-  --border: #DCCDAE;
-  --parch: #F4EBD4;
-  --seal-text: #F4EBD4;
-  --sky-top: #EEE3CB;
-  --sky-glow: #EAB06C;
-  --sun: #C4452A;
-  --tree: #1A1814;
-  --stroke: #1A1814;
-  --wood: #5A3A21;
-  --wood-hi: #8A5F3B;
+  --bg: #EFEFF0;
+  --fg: #1D1D20;
+  --ink-2: #3D3D42;
+  --muted: #6B6B72;
+  --forest: #2F6FC4;        /* accent (token name kept from the old theme) */
+  --forest-light: #4A88D8;
+  --forest-dark: #3D3D42;
+  --border: #DCDCE0;
+  --parch: #E6E6E9;
 }
 
 .dark {
-  --bg: #13141A;
-  --fg: #E8DFCB;
-  --ink-2: #BDB4A0;
-  --muted: #959083;
-  --forest: #6F8FD6;
-  --forest-light: #93ACE4;
-  --forest-dark: #BDB4A0;
-  --border: #2A2B33;
-  --parch: #221F19;
-  --seal-text: #ECE2CC;
-  --sky-top: #0D0F17;
-  --sky-glow: #2C3452;
-  --sun: #E9E2CD;
-  --tree: #D8CEB6;      /* night: hero ink matches the moonlit ridge stroke */
-  --stroke: #D8CEB6;
-  --wood: #3A2615;
-  --wood-hi: #5E412A;
+  --bg: #151517;
+  --fg: #E6E6E8;
+  --ink-2: #BCBCC2;
+  --muted: #8A8A92;
+  --forest: #7FB4F0;
+  --forest-light: #A6CCF6;
+  --forest-dark: #BCBCC2;
+  --border: #2A2A2F;
+  --parch: #1D1D20;
 }
 
 @theme inline {
@@ -54,29 +38,23 @@
   --color-forest-dark: var(--forest-dark);
   --color-border: var(--border);
 
-  --font-serif: "Spectral", Georgia, "Times New Roman", serif;
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-caps: "Spectral SC", "Spectral", Georgia, serif;
+  --font-geist: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @layer base {
   html {
-    font-family: var(--font-serif);
+    font-family: var(--font-geist);
     background-color: var(--color-paper);
     color: var(--color-ink);
     scroll-behavior: smooth;
     overflow-y: scroll;
   }
 
-  body {
-    /* faint paper fibre */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .25 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
   h1, h2, h3 {
-    font-family: var(--font-display);
+    font-family: var(--font-geist);
     font-weight: 500;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -95,25 +73,10 @@
   }
 }
 
-/* Small-caps label used for dates, tags and nav */
+/* Small label used for dates and tags */
 .caps {
-  font-family: var(--font-caps);
-  letter-spacing: 0.08em;
-}
-
-/* The SP seal: sign-off on the parchment and on every post */
-.seal {
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex: none;
-  background: var(--forest);
-  color: var(--seal-text);
-  font: 600 1rem/1 var(--font-display);
+  font-family: var(--font-geist);
   letter-spacing: 0.02em;
-  border-radius: 1px;
-  filter: url(#seal-rough);
 }
 
 /* Prose styling for blog posts */
@@ -124,8 +87,8 @@
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  font-family: var(--font-display);
-  font-weight: 600;
+  font-family: var(--font-geist);
+  font-weight: 500;
   color: var(--fg);
   margin-top: 2em;
   margin-bottom: 0.75em;
