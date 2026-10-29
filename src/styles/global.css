@@ -3,29 +3,29 @@
 /* Dark mode: class-based toggle */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Plain sky: the same near-white and near-black the Skies hero is painted on. Accent is Aang's airbending blue. */
+/* Claude palette: ivory and warm charcoal, the same the Sky hero is painted on. Accent is clay. */
 :root {
-  --bg: #EFEFF0;
-  --fg: #1D1D20;
-  --ink-2: #3D3D42;
-  --muted: #6B6B72;
-  --forest: #2F6FC4;        /* accent (token name kept from the old theme) */
-  --forest-light: #4A88D8;
-  --forest-dark: #3D3D42;
-  --border: #DCDCE0;
-  --parch: #E6E6E9;
+  --bg: #FAF9F5;
+  --fg: #141413;
+  --ink-2: #3D3D3A;
+  --muted: #73726C;
+  --forest: #C96442;        /* accent (token name kept from the old theme) */
+  --forest-light: #D97757;
+  --forest-dark: #3D3D3A;
+  --border: #E3E1D8;
+  --parch: #F0EEE6;
 }
 
 .dark {
-  --bg: #151517;
-  --fg: #E6E6E8;
-  --ink-2: #BCBCC2;
-  --muted: #8A8A92;
-  --forest: #7FB4F0;
-  --forest-light: #A6CCF6;
-  --forest-dark: #BCBCC2;
-  --border: #2A2A2F;
-  --parch: #1D1D20;
+  --bg: #262624;
+  --fg: #FAF9F5;
+  --ink-2: #C2C0B6;
+  --muted: #9C9A92;
+  --forest: #D97757;
+  --forest-light: #E89A7E;
+  --forest-dark: #C2C0B6;
+  --border: #3A3936;
+  --parch: #30302E;
 }
 
 @theme inline {

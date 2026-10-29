@@ -107,8 +107,8 @@ export function startSkies(cvs) {
   function buildBg() {
     const b = bg.getContext('2d'), W = cvs.width, H = cvs.height;
     const g = b.createLinearGradient(0, 0, 0, H);
-    if (light) { g.addColorStop(0, '#f6f6f4'); g.addColorStop(1, '#e7e7ea'); }
-    else { g.addColorStop(0, '#111113'); g.addColorStop(1, '#1a1a1d'); }
+    if (light) { g.addColorStop(0, '#faf9f5'); g.addColorStop(1, '#f0eee6'); }
+    else { g.addColorStop(0, '#1f1e1d'); g.addColorStop(1, '#262624'); }
     b.fillStyle = g; b.fillRect(0, 0, W, H);
     b.strokeStyle = light ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.024)'; b.lineWidth = 1;
     b.beginPath();
@@ -152,10 +152,10 @@ export function startSkies(cvs) {
       makeLayer({ speed: 0.18, freq: 0.05, aspect: 2.2, thr: 0.56, band: v => 1 - smooth(0.5, 0.85, v), dmax: 0.22,
         c0: [92, 96, 108], c1: [148, 152, 164], c0L: [150, 156, 170], c1L: [178, 184, 196], op: 0.7, z: 40 }),
       makeLayer({ speed: 0.5, freq: 0.035, aspect: 2.6, thr: 0.54, band: v => Math.exp(-(((v - 0.4) / 0.2) ** 2)), dmax: 0.62,
-        c0: [108, 112, 124], c1: [204, 206, 214], c0L: [140, 148, 166], c1L: [206, 210, 220], op: 0.8, z: 50 }),
+        c0: [118, 112, 104], c1: [214, 208, 196], c0L: [168, 160, 146], c1L: [222, 216, 204], op: 0.8, z: 50 }),
       makeLayer({ speed: 1.3, freq: 0.025, aspect: 2.4, thr: 0.56,
         band: v => Math.max(Math.exp(-(((v - 0.93) / 0.13) ** 2)), 0.8 * Math.exp(-(((v - 0.04) / 0.08) ** 2))), dmax: 0.85,
-        c0: [124, 128, 140], c1: [238, 238, 242], c0L: [132, 140, 160], c1L: [222, 224, 232], op: 0.72, z: 60 }),
+        c0: [134, 128, 118], c1: [240, 236, 228], c0L: [160, 152, 138], c1L: [230, 226, 216], op: 0.72, z: 60 }),
     ];
     tooth = { first: true };
     parts = []; blasts = [];
