@@ -5,7 +5,7 @@ const path = Astro.url.pathname;
 const isHome = path === '/';
 
 const navLinks = [
-  { href: '/', label: 'skies', active: isHome },
+  { href: '/', label: 'sky', active: isHome },
   { href: '/blog', label: 'blog', active: path.startsWith('/blog') },
 ];
 ---

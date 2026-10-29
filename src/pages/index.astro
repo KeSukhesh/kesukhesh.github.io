@@ -18,7 +18,7 @@ const links = [
   ></canvas>
 
   <section class="intro relative z-10 min-h-[100svh] flex items-end px-[max(1.5rem,20vw)] pb-[max(3rem,11vh)] pointer-events-none">
-    <div class="font-geist text-[15px] leading-[27px] max-w-[56rem] pointer-events-auto">
+    <div class="copy relative font-geist text-[15px] leading-[27px] max-w-[56rem] pointer-events-auto">
       <p class="tagline mb-[54px]">let go of the ground,<br />learn the wind<span class="cursor" aria-hidden="true"></span></p>
       <div class="flex flex-col gap-[11px]">
         <p>Hi, I'm Sukhesh.</p>
@@ -39,6 +39,15 @@ const links = [
   .intro { --text: #f2efe8; --dim: rgb(242 239 232 / .6); --halo: #151517; color: var(--text); }
   :global(html:not(.dark)) .intro { --text: #1d1d20; --dim: rgb(29 29 32 / .58); --halo: #efeff0; }
   .intro p { text-shadow: 0 0 4px var(--halo), 0 0 12px var(--halo); }
+  /* Soft pool of sky colour behind the copy: fliers dim as they pass under the text instead of fighting it. */
+  .copy::before {
+    content: '';
+    position: absolute;
+    inset: -5rem -7rem -4rem -7rem;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(closest-side, var(--halo) 55%, rgb(from var(--halo) r g b / .7) 75%, transparent);
+  }
   .tagline, .sep { color: var(--dim); }
   .intro a {
     text-decoration: underline;
